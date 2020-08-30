@@ -1,13 +1,13 @@
-From 4c973ce02887fcc15a943091d7e749fd263bce12 Mon Sep 17 00:00:00 2001
+From f482657a186b0729c6af24ee58529a01d26d82fc Mon Sep 17 00:00:00 2001
 From: Attila Gluck <gluck.attila.bela@gmail.com>
-Date: Sun, 30 Aug 2020 18:20:39 +0200
+Date: Sun, 30 Aug 2020 18:44:37 +0200
 Subject: [PATCH 2/2] dmenu-lineheight
 
 ---
  config.def.h |  2 ++
  dmenu.1      |  5 ++++-
- dmenu.c      | 15 ++++++++++-----
- 3 files changed, 16 insertions(+), 6 deletions(-)
+ dmenu.c      | 19 +++++++++++++------
+ 3 files changed, 19 insertions(+), 7 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
 index 1edb647..e9d80a7 100644
@@ -46,7 +46,7 @@ index 762f707..1806156 100644
  dmenu lists items vertically, with the given number of lines.
  .TP
 diff --git a/dmenu.c b/dmenu.c
-index 4a56df7..2c93ee1 100644
+index 4a56df7..f9b8fa4 100644
 --- a/dmenu.c
 +++ b/dmenu.c
 @@ -131,7 +131,7 @@ drawmenu(void)
@@ -69,16 +69,20 @@ index 4a56df7..2c93ee1 100644
  
  	if (lines > 0) {
  		/* draw vertical list */
-@@ -619,7 +619,7 @@ setup(void)
+@@ -619,8 +619,10 @@ setup(void)
  	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
  
  	/* calculate menu geometry */
 -	bh = drw->fonts->h + 2;
-+	bh = MAX(bh,lineheight);	/* make a menu line AT LEAST 'lineheight' tall */
- 	lines = MAX(lines, 0);
+-	lines = MAX(lines, 0);
++    bh = drw->fonts->h+2;
++    /* make a menu line AT LEAST 'lineheight' tall */
++	bh = MAX(bh,lineheight);
++    lines = MAX(lines, 0);
  	mh = (lines + 1) * bh;
  #ifdef XINERAMA
-@@ -701,7 +701,8 @@ static void
+ 	i = 0;
+@@ -701,7 +703,8 @@ static void
  usage(void)
  {
  	fputs("usage: dmenu [-bfiPv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
@@ -88,7 +92,7 @@ index 4a56df7..2c93ee1 100644
  	exit(1);
  }
  
-@@ -736,6 +737,10 @@ main(int argc, char *argv[])
+@@ -736,6 +739,10 @@ main(int argc, char *argv[])
  			prompt = argv[++i];
  		else if (!strcmp(argv[i], "-fn"))  /* font or font set */
  			fonts[0] = argv[++i];
